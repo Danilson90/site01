@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetCare Clínica Veterinária 24h</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        vet: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        brand: {
+                            light: '#e0f2fe',
+                            DEFAULT: '#0284c7',
+                            dark: '#0369a1'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .page-view { display: none; }
+        .page-view.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Top Emergency Bar -->
+    <div class="bg-red-600 text-white text-xs sm:text-sm py-2 px-4 font-medium shadow-inner">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-1 text-center">
+            <div class="flex items-center gap-2 justify-center">
+                <i data-lucide="alert-triangle" class="w-4 h-4 animate-pulse"></i>
+                <span>Plantão Veterinário 24h Disponível Agora!</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="tel:0800123456" class="flex items-center gap-1 font-bold underline hover:text-red-100">
+                    <i data-lucide="phone-call" class="w-3.5 h-3.5"></i> (11) 99999-8888
+                </a>
+                <span class="hidden md:inline">| Rua dos Bichos, 123 - São Paulo/SP</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#home" onclick="switchPage('home'); return false;" class="flex items-center gap-3 group">
+                    <div class="bg-vet-500 text-white p-2.5 rounded-2xl shadow-md group-hover:bg-vet-600 transition">
+                        <i data-lucide="heart-pulse" class="w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Pet<span class="text-vet-600">Care</span></span>
+                        <span class="block text-xs font-medium text-slate-500 uppercase tracking-wider">Clínica Veterinária</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <nav class="hidden lg:flex items-center gap-1 font-medium text-sm text-slate-600">
+                    <button onclick="switchPage('home')" data-nav="home" class="nav-btn px-4 py-2 rounded-xl transition hover:text-vet-600 hover:bg-vet-50 active-nav text-vet-600 font-semibold">Início</button>
+                    <button onclick="switchPage('about')" data-nav="about" class="nav-btn px-4 py-2 rounded-xl transition hover:text-vet-600 hover:bg-vet-50">Sobre Nós</button>
+                    <button onclick="switchPage('services')" data-nav="services" class="nav-btn px-4 py-2 rounded-xl transition hover:text-vet-600 hover:bg-vet-50">Serviços</button>
+                    <button onclick="switchPage('team')" data-nav="team" class="nav-btn px-4 py-2 rounded-xl transition hover:text-vet-600 hover:bg-vet-50">Equipe</button>
+                    <button onclick="switchPage('blog')" data-nav="blog" class="nav-btn px-4 py-2 rounded-xl transition hover:text-vet-600 hover:bg-vet-50">Blog & Dicas</button>
+                    <button onclick="switchPage('contact')" data-nav="contact" class="nav-btn px-4 py-2 rounded-xl transition hover:text-vet-600 hover:bg-vet-50">Contato</button>
+                </nav>
+
+                <!-- CTA Appointment Button -->
+                <div class="hidden sm:flex items-center gap-3">
+                    <button onclick="openBookingModal()" class="bg-vet-600 hover:bg-vet-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-lg shadow-vet-500/20 transition flex items-center gap-2">
+                        <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+                        Agendar Consulta
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex lg:hidden items-center">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="p-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-2 shadow-xl">
+            <button onclick="switchPage('home'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-xl font-medium hover:bg-vet-50 text-slate-700">Início</button>
+            <button onclick="switchPage('about'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-xl font-medium hover:bg-vet-50 text-slate-700">Sobre Nós</button>
+            <button onclick="switchPage('services'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-xl font-medium hover:bg-vet-50 text-slate-700">Serviços</button>
+            <button onclick="switchPage('team'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-xl font-medium hover:bg-vet-50 text-slate-700">Equipe</button>
+            <button onclick="switchPage('blog'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-xl font-medium hover:bg-vet-50 text-slate-700">Blog & Dicas</button>
+            <button onclick="switchPage('contact'); toggleMobileMenu();" class="block w-full text-left px-4 py-3 rounded-xl font-medium hover:bg-vet-50 text-slate-700">Contato</button>
+            <div class="pt-2">
+                <button onclick="openBookingModal(); toggleMobileMenu();" class="w-full bg-vet-600 hover:bg-vet-700 text-white font-semibold py-3 rounded-xl shadow-md text-center flex items-center justify-center gap-2">
+                    <i data-lucide="calendar-plus" class="w-4 h-4"></i> Agendar Consulta
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <div id="view-home" class="page-view active">
+            <!-- Hero Section -->
+            <section class="relative bg-gradient-to-br from-vet-50 via-sky-50 to-white py-16 lg:py-24 overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                            <span class="inline-flex items-center gap-2 bg-vet-100 text-vet-800 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full">
+                                <i data-lucide="award" class="w-4 h-4"></i> Excelência em Medicina Veterinária 24h
+                            </span>
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                                Cuidado amoroso e profissional para o seu <span class="text-vet-600">melhor amigo</span>
+                            </h1>
+                            <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0">
+                                Nossa clínica conta com infraestrutura hospitalar completa, UTI veterinária, exames avançados e plantão médico veterinário 24 horas todos os dias do ano.
+                            </p>
+                            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                                <button onclick="openBookingModal()" class="w-full sm:w-auto bg-vet-600 hover:bg-vet-700 text-white font-semibold px-8 py-4 rounded-2xl shadow-xl shadow-vet-500/25 transition flex items-center justify-center gap-2">
+                                    <i data-lucide="calendar" class="w-5 h-5"></i> Agendar Horário
+                                </button>
+                                <button onclick="switchPage('services')" class="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-700 font-semibold px-8 py-4 rounded-2xl border border-slate-200 transition flex items-center justify-center gap-2 shadow-sm">
+                                    <i data-lucide="stethoscope" class="w-5 h-5 text-vet-600"></i> Conhecer Serviços
+                                </button>
+                            </div>
+                            <!-- Quick Trust Metrics -->
+                            <div class="grid grid-cols-3 gap-4 pt-8 border-t border-slate-200/60 max-w-lg mx-auto lg:mx-0">
+                                <div>
+                                    <p class="text-2xl sm:text-3xl font-extrabold text-slate-900">+15 mil</p>
+                                    <p class="text-xs sm:text-sm text-slate-500 font-medium">Pets Atendidos</p>
+                                </div>
+                                <div>
+                                    <p class="text-2xl sm:text-3xl font-extrabold text-slate-900">24/7</p>
+                                    <p class="text-xs sm:text-sm text-slate-500 font-medium">Plantão Ativo</p>
+                                </div>
+                                <div>
+                                    <p class="text-2xl sm:text-3xl font-extrabold text-slate-900">99%</p>
+                                    <p class="text-xs sm:text-sm text-slate-500 font-medium">Clientes Felizes</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lg:col-span-5 relative">
+                            <div class="relative mx-auto max-w-md lg:max-w-none">
+                                <div class="absolute -inset-4 bg-gradient-to-r from-vet-500 to-sky-400 rounded-3xl blur-2xl opacity-20 animate-pulse"></div>
+                                <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\cachorro.jpg" alt="Veterinário examinando cachorro feliz" class="relative rounded-3xl shadow-2xl w-full object-cover h-[450px]">
+                                <!-- Floating badge card -->
+                                <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3">
+                                    <div class="bg-amber-100 text-amber-600 p-3 rounded-xl">
+                                        <i data-lucide="star" class="w-6 h-6 fill-amber-400 text-amber-400"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-900">Nota 4.9 / 5.0</p>
+                                        <p class="text-xs text-slate-500">Mais de 1.200 avaliações</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Emergency Highlight Banner -->
+            <section class="bg-red-500 text-white py-12 px-4">
+                <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+                    <div class="space-y-2">
+                        <div class="inline-flex items-center gap-2 bg-red-600 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
+                            <i data-lucide="siren" class="w-4 h-4"></i> Emergência Veterinária
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold">Seu pet precisa de atendimento urgente agora?</h2>
+                        <p class="text-red-100 max-w-xl text-sm sm:text-base">Equipe cirúrgica e UTI pronta para receber casos críticos a qualquer hora da noite ou do dia sem precisar agendar.</p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="tel:0800123456" class="bg-white text-red-600 hover:bg-red-50 font-bold px-6 py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-base">
+                            <i data-lucide="phone" class="w-5 h-5"></i> Ligar Plantão 24h
+                        </a>
+                        <button onclick="switchPage('contact')" class="bg-red-700 hover:bg-red-800 text-white font-semibold px-6 py-3.5 rounded-xl transition border border-red-400/40">
+                            Ver Como Chegar
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Quick Grid -->
+            <section class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                        <span class="text-vet-600 font-bold uppercase tracking-wider text-sm">O que oferecemos</span>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Especialidades Completas para seu Pet</h2>
+                        <p class="text-slate-600 text-base">Tratamentos especializados com equipamentos de última geração e profissionais apaixonados por animais.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-slate-50 hover:bg-vet-50/50 p-8 rounded-3xl border border-slate-100 transition group hover:shadow-xl">
+                            <div class="w-14 h-14 bg-vet-100 text-vet-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-vet-600 group-hover:text-white transition">
+                                <i data-lucide="stethoscope" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Consultas de Rotina</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6">Avaliação clínica completa, verificação de peso, saúde bucal e orientações de bem-estar para todas as idades.</p>
+                            <button onclick="switchPage('services')" class="text-vet-600 font-semibold text-sm flex items-center gap-1 group-hover:underline">
+                                Saiba mais <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <div class="bg-slate-50 hover:bg-vet-50/50 p-8 rounded-3xl border border-slate-100 transition group hover:shadow-xl">
+                            <div class="w-14 h-14 bg-vet-100 text-vet-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-vet-600 group-hover:text-white transition">
+                                <i data-lucide="activity" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Cirurgia Avançada</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6">Centro cirúrgico esterilizado com monitoramento anestésico avançado e equipe de cirurgiões experientes.</p>
+                            <button onclick="switchPage('services')" class="text-vet-600 font-semibold text-sm flex items-center gap-1 group-hover:underline">
+                                Saiba mais <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+
+                        <div class="bg-slate-50 hover:bg-vet-50/50 p-8 rounded-3xl border border-slate-100 transition group hover:shadow-xl">
+                            <div class="w-14 h-14 bg-vet-100 text-vet-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-vet-600 group-hover:text-white transition">
+                                <i data-lucide="flask-conical" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Exames Laboratoriais</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6">Laboratório próprio para exames de sangue, urina, parasitológicos e testes rápidos com resultados ágeis.</p>
+                            <button onclick="switchPage('services')" class="text-vet-600 font-semibold text-sm flex items-center gap-1 group-hover:underline">
+                                Saiba mais <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-12">
+                        <button onclick="switchPage('services')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold px-8 py-3.5 rounded-xl transition inline-flex items-center gap-2">
+                            Ver todos os 8 serviços <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section class="py-20 bg-slate-50 border-t border-slate-200/60">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-2xl mx-auto mb-16 space-y-4">
+                        <span class="text-vet-600 font-bold uppercase tracking-wider text-sm">Depoimentos</span>
+                        <h2 class="text-3xl font-extrabold text-slate-900">O que dizem os tutores</h2>
+                        <p class="text-slate-600">Histórias reais de quem confia na nossa dedicação.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative">
+                            <div class="flex items-center gap-1 text-amber-400 mb-4">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            </div>
+                            <p class="text-slate-600 text-sm italic mb-6">"Levei meu gato Thor às 3h da manhã em estado grave. A equipe do plantão foi extremamente ágil e carinhosa. Salvaram a vida dele!"</p>
+                            <div class="flex items-center gap-4">
+                                <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\gato1.jpg" alt="Cliente" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+
+
+
+                                    <h4 class="font-bold text-slate-900 text-sm">Camila Martins</h4>
+                                    <p class="text-xs text-slate-500">Tutora do Thor (Gato)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative">
+                            <div class="flex items-center gap-1 text-amber-400 mb-4">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            </div>
+                            <p class="text-slate-600 text-sm italic mb-6">"Atendimento impecável! O Dr. Roberto acompanha a minha Golden Retriever desde filhote. Estrutura limpa, moderna e preços justos."</p>
+                            <div class="flex items-center gap-4">
+
+                                <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\cachorro2.jpg" alt="Cliente" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-slate-900 text-sm">Rodrigo Souza</h4>
+                                    <p class="text-xs text-slate-500">Tutor da Mel (Cachorros)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative">
+                            <div class="flex items-center gap-1 text-amber-400 mb-4">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            </div>
+                            <p class="text-slate-600 text-sm italic mb-6">"O banho e tosa é maravilhoso e a veterinária dermato resolveu a alergia da minha Shih-tzu de vez. Recomendo de olhos fechados!"</p>
+                            <div class="flex items-center gap-4">
+                                <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\cachorro2.jpg" alt="Cliente" class="w-12 h-12 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold text-slate-900 text-sm">Amanda Pereira</h4>
+                                    <p class="text-xs text-slate-500">Tutora da Luna</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-about" class="page-view">
+            <section class="bg-vet-50 py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+                    <span class="text-vet-600 font-bold uppercase tracking-wider text-sm">Nossa História</span>
+                    <h1 class="text-4xl font-extrabold text-slate-900">Sobre a PetCare</h1>
+                    <p class="text-slate-600 max-w-2xl mx-auto">Conheça nossa trajetória de dedicação, amor e inovação na saúde dos animais desde 2012.</p>
+                </div>
+            </section>
+
+            <section class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div class="space-y-6">
+                            <h2 class="text-3xl font-extrabold text-slate-900">Mais de uma década cuidando da família multiespécie</h2>
+                            <p class="text-slate-600 leading-relaxed">
+                                Fundada em 2012 por um grupo de médicos veterinários apaixonados, a PetCare nasceu com o propósito de transformar o atendimento veterinário na região, unindo tecnologia de ponta, exames precisos e, acima de tudo, respeito e carinho com cada paciente.
+                            </p>
+                            <p class="text-slate-600 leading-relaxed">
+                                Nossa clínica dispõe de ambientes separados para cães e gatos (reduzindo o estresse felino), centro cirúrgico de alta complexidade, internação climatizada e equipe multidisciplinar de plantão 24 horas.
+                            </p>
+                            <div class="grid grid-cols-2 gap-6 pt-4">
+                                <div class="bg-vet-50 p-5 rounded-2xl border border-vet-100">
+                                    <h4 class="font-bold text-vet-800 text-lg mb-1">Nossa Missão</h4>
+                                    <p class="text-xs text-slate-600">Proporcionar longevidade e qualidade de vida aos pets através de medicina preventiva e curativa de excelência.</p>
+                                </div>
+                                <div class="bg-sky-50 p-5 rounded-2xl border border-sky-100">
+                                    <h4 class="font-bold text-sky-800 text-lg mb-1">Nossa Visão</h4>
+                                    <p class="text-xs text-slate-600">Ser referência nacional em hospitais veterinários humanizados e inovação tecnológica.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\cachorro5.jpg" alt="Interior da clínica" class="rounded-3xl shadow-lg w-full h-[320px] object-cover">
+                            <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\cachorro6.jpg" class="rounded-3xl shadow-lg w-full h-[320px] object-cover mt-8">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-services" class="page-view">
+            <section class="bg-vet-50 py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+                    <span class="text-vet-600 font-bold uppercase tracking-wider text-sm">Nossos Serviços</span>
+                    <h1 class="text-4xl font-extrabold text-slate-900">Soluções Completas em Saúde Animal</h1>
+                    <p class="text-slate-600 max-w-2xl mx-auto">Tudo o que seu pet precisa em um só lugar, com segurança e profissionais especializados.</p>
+                </div>
+            </section>
+
+            <section class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Service 1 -->
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200/60 hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-vet-100 text-vet-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="stethoscope" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Consultas Especializadas</h3>
+                            <p class="text-slate-600 text-sm mb-6">Clínica geral, cardiologia, dermatologia, oftalmologia, ortopedia e endocrinologia veterinária.</p>
+                            <button onclick="openBookingModal()" class="w-full bg-vet-600 hover:bg-vet-700 text-white font-semibold py-2.5 rounded-xl text-sm transition">Agendar Consulta</button>
+                        </div>
+
+                        <!-- Service 2 -->
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200/60 hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-vet-100 text-vet-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="siren" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Pronto Socorro 24h</h3>
+                            <p class="text-slate-600 text-sm mb-6">Atendimento de emergência imediata a qualquer dia e horário com suporte completo de UTI.</p>
+                            <button onclick="openBookingModal()" class="w-full bg-vet-600 hover:bg-vet-700 text-white font-semibold py-2.5 rounded-xl text-sm transition">Agendar Consulta</button>
+                        </div>
+
+                        <!-- Service 3 -->
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200/60 hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-vet-100 text-vet-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="activity" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Centro Cirúrgico</h3>
+                            <p class="text-slate-600 text-sm mb-6">Cirurgias gerais e ortopédicas com anestesia inalatória computadorizada e monitoramento contínuo.</p>
+                            <button onclick="openBookingModal()" class="w-full bg-vet-600 hover:bg-vet-700 text-white font-semibold py-2.5 rounded-xl text-sm transition">Agendar Consulta</button>
+                        </div>
+
+                        <!-- Service 4 -->
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200/60 hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-vet-100 text-vet-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="flask-conical" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Exames Laboratoriais</h3>
+                            <p class="text-slate-600 text-sm mb-6">Hemogramas, bioquímicos, exames hormonais e testes rápidos com rapidez e precisão nos resultados.</p>
+                            <button onclick="openBookingModal()" class="w-full bg-vet-600 hover:bg-vet-700 text-white font-semibold py-2.5 rounded-xl text-sm transition">Agendar Consulta</button>
+                        </div>
+
+                        <!-- Service 5 -->
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200/60 hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-vet-100 text-vet-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="scan" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Diagnóstico por Imagem</h3>
+                            <p class="text-slate-600 text-sm mb-6">Ultrassonografia abdominal e ecocardiograma digital realizados por especialistas certificados.</p>
+                            <button onclick="openBookingModal()" class="w-full bg-vet-600 hover:bg-vet-700 text-white font-semibold py-2.5 rounded-xl text-sm transition">Agendar Consulta</button>
+                        </div>
+
+                        <!-- Service 6 -->
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200/60 hover:shadow-lg transition">
+                            <div class="w-14 h-14 bg-vet-100 text-vet-600 rounded-2xl flex items-center justify-center mb-6">
+                                <i data-lucide="scissors" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Banho & Tosa</h3>
+                            <p class="text-slate-600 text-sm mb-6">Higiene completa com produtos hipoalergênicos, tosa higiênica e profissionais especializados em manejo gentil.</p>
+                            <button onclick="openBookingModal()" class="w-full bg-vet-600 hover:bg-vet-700 text-white font-semibold py-2.5 rounded-xl text-sm transition">Agendar Consulta</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-team" class="page-view">
+            <section class="bg-vet-50 py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+                    <span class="text-vet-600 font-bold uppercase tracking-wider text-sm">Nossa Equipe</span>
+                    <h1 class="text-4xl font-extrabold text-slate-900">Médicos Veterinários Especialistas</h1>
+                    <p class="text-slate-600 max-w-2xl mx-auto">Profissionais altamente qualificados e dedicados ao bem-estar animal.</p>
+                </div>
+            </section>
+
+            <section class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="bg-slate-50 rounded-3xl overflow-hidden border border-slate-200/60 shadow-sm group">
+                            <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\dotora vet.jpg" alt="Dr. Roberto Silva" class="w-full h-72 object-cover group-hover:scale-105 transition duration-300">
+                            <div class="p-6 space-y-2">
+                                <span class="text-xs font-bold text-vet-600 uppercase tracking-wider">Diretor Clínico & Cirurgião</span>
+                                <h3 class="text-xl font-bold text-slate-900">Dr. Roberto Silva</h3>
+                                <p class="text-slate-600 text-sm">CRMV-SP 18294 • Especialista em Cirurgia de Tecidos Moles e Ortopedia.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-3xl overflow-hidden border border-slate-200/60 shadow-sm group">
+                            <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\dotora vet 3.jpg" alt="Dra. Juliana Mendes" class="w-full h-72 object-cover group-hover:scale-105 transition duration-300">
+                            <div class="p-6 space-y-2">
+                                <span class="text-xs font-bold text-vet-600 uppercase tracking-wider">Cardiologia & Clínica</span>
+                                <h3 class="text-xl font-bold text-slate-900">Dra. Juliana Mendes</h3>
+                                <p class="text-slate-600 text-sm">CRMV-SP 22104 • Pós-graduada em Cardiologia Veterinária de Pequenos Animais.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-3xl overflow-hidden border border-slate-200/60 shadow-sm group">
+                            <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\dotora vet 2.jpg" alt="Dr. Carlos Eduardo" class="w-full h-72 object-cover group-hover:scale-105 transition duration-300">
+                            <div class="p-6 space-y-2">
+                                <span class="text-xs font-bold text-vet-600 uppercase tracking-wider">Plantão 24h & UTI</span>
+                                <h3 class="text-xl font-bold text-slate-900">Dr. Carlos Eduardo</h3>
+                                <p class="text-slate-600 text-sm">CRMV-SP 29381 • Médico Veterinário Intensivista e Emergências.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-blog" class="page-view">
+            <section class="bg-vet-50 py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+                    <span class="text-vet-600 font-bold uppercase tracking-wider text-sm">Blog & Informação</span>
+                    <h1 class="text-4xl font-extrabold text-slate-900">Dicas de Saúde Pet</h1>
+                    <p class="text-slate-600 max-w-2xl mx-auto">Artigos elaborados por nossos veterinários para ajudar no dia a dia com seu cão ou gato.</p>
+                </div>
+            </section>
+
+            <section class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <article class="bg-slate-50 rounded-3xl overflow-hidden border border-slate-200/60 shadow-sm flex flex-col">
+                            <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\cachorro2.jpg" alt="Cachorro comendo" class="w-full h-48 object-cover">
+                            <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                                <div>
+                                    <span class="text-xs font-semibold text-vet-600 bg-vet-100 px-3 py-1 rounded-full">Nutrição</span>
+                                    <h3 class="text-lg font-bold text-slate-900 mt-3 mb-2">Alimentos proibidos: O que seu pet nunca deve comer</h3>
+                                    <p class="text-slate-600 text-sm">Chocolate, cebola, uva e outros alimentos comuns que podem ser tóxicos para cães e gatos.</p>
+                                </div>
+                                <div class="pt-4 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
+                                    <span>10 de Outubro, 2026</span>
+                                    <span class="font-semibold text-vet-600">Ler artigo</span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="bg-slate-50 rounded-3xl overflow-hidden border border-slate-200/60 shadow-sm flex flex-col">
+                            <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\vacina.jpg" alt="Gato tomando vacina" class="w-full h-48 object-cover">
+                            <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                                <div>
+                                    <span class="text-xs font-semibold text-sky-600 bg-sky-100 px-3 py-1 rounded-full">Prevenção</span>
+                                    <h3 class="text-lg font-bold text-slate-900 mt-3 mb-2">Calendário de Vacinação: Proteja seu filhote desde cedo</h3>
+                                    <p class="text-slate-600 text-sm">Entenda quais vacinas são obrigatórias e quando aplicar as doses de reforço anuais.</p>
+                                </div>
+                                <div class="pt-4 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
+                                    <span>05 de Outubro, 2026</span>
+                                    <span class="font-semibold text-vet-600">Ler artigo</span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="bg-slate-50 rounded-3xl overflow-hidden border border-slate-200/60 shadow-sm flex flex-col">
+                            <img src="C:\Users\Aluno\Downloads\site-menu\AULA-HTML\Danilson\aula_8\imagem\gato1.jpg" alt="Cachorro no calor" class="w-full h-48 object-cover">
+                            <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                                <div>
+                                    <span class="text-xs font-semibold text-amber-600 bg-amber-100 px-3 py-1 rounded-full">Cuidados de Verão</span>
+                                    <h3 class="text-lg font-bold text-slate-900 mt-3 mb-2">Cuidados com os pets nos dias de muito calor</h3>
+                                    <p class="text-slate-600 text-sm">Como evitar queimaduras nas patas no asfalto e manter seu pet hidratado nos dias quentes.</p>
+                                </div>
+                                <div class="pt-4 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center">
+                                    <span>28 de Setembro, 2026</span>
+                                    <span class="font-semibold text-vet-600">Ler artigo</span>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-contact" class="page-view">
+            <section class="bg-vet-50 py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+                    <span class="text-vet-600 font-bold uppercase tracking-wider text-sm">Fale Conosco</span>
+                    <h1 class="text-4xl font-extrabold text-slate-900">Contato & Localização</h1>
+                    <p class="text-slate-600 max-w-2xl mx-auto">Estamos abertos 24 horas por dia para receber você e seu pet.</p>
+                </div>
+            </section>
+
+            <section class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <!-- Contact Info & Map placeholder -->
+                        <div class="space-y-8">
+                            <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200/60 space-y-6">
+                                <h3 class="text-2xl font-bold text-slate-900">Informações de Contato</h3>
+                                
+                                <div class="flex items-start gap-4">
+                                    <div class="bg-vet-100 text-vet-600 p-3 rounded-2xl">
+                                        <i data-lucide="map-pin" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900">Endereço</h4>
+                                        <p class="text-slate-600 text-sm">Rua dos Bichos, 123 - Bairro Jardim Paulista, São Paulo - SP</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-4">
+                                    <div class="bg-vet-100 text-vet-600 p-3 rounded-2xl">
+                                        <i data-lucide="phone-call" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900">Telefones</h4>
+                                        <p class="text-slate-600 text-sm">Plantão 24h: (11) 99999-8888</p>
+                                        <p class="text-slate-600 text-sm">Recepção: (11) 3333-4444</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-4">
+                                    <div class="bg-vet-100 text-vet-600 p-3 rounded-2xl">
+                                        <i data-lucide="clock" class="w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900">Horário de Atendimento</h4>
+                                        <p class="text-slate-600 text-sm">Consultas com agendamento: Seg a Sáb das 8h às 20h</p>
+                                        <p class="text-slate-600 text-sm font-semibold text-red-600">Pronto Socorro e UTI: 24 horas (Todos os dias)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Form -->
+                        <div class="bg-slate-50 p-8 rounded-3xl border border-slate-200/60">
+                            <h3 class="text-2xl font-bold text-slate-900 mb-6">Envie sua Mensagem</h3>
+                            <form onsubmit="handleContactSubmit(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Seu Nome</label>
+                                    <input type="text" required placeholder="Ex: Maria Silva" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-vet-500 bg-white">
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1">E-mail</label>
+                                        <input type="email" required placeholder="seu@email.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-vet-500 bg-white">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-700 mb-1">Telefone / WhatsApp</label>
+                                        <input type="tel" required placeholder="(11) 98888-7777" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-vet-500 bg-white">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">Mensagem ou Dúvida</label>
+                                    <textarea rows="4" required placeholder="Escreva como podemos ajudar..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-vet-500 bg-white"></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-vet-600 hover:bg-vet-700 text-white font-semibold py-3.5 rounded-xl shadow-lg transition">Enviar Mensagem</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Appointment Booking Modal -->
+    <div id="booking-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeBookingModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 p-2 rounded-full bg-slate-100 transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="mb-6">
+                <span class="text-xs font-bold text-vet-600 bg-vet-100 px-3 py-1 rounded-full uppercase">Agendamento Online</span>
+                <h3 class="text-2xl font-extrabold text-slate-900 mt-2">Marcar Consulta Veterinária</h3>
+                <p class="text-slate-500 text-sm">Preencha os dados abaixo e entraremos em contato para confirmar.</p>
+            </div>
+            <form onsubmit="handleBookingSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Nome do Tutor</label>
+                    <input type="text" required placeholder="Seu nome completo" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-vet-500">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Nome do Pet</label>
+                        <input type="text" required placeholder="Ex: Bob" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-vet-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Espécie</label>
+                        <select class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-vet-500 bg-white">
+                            <option>Cachorro</option>
+                            <option>Gato</option>
+                            <option>Outros</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Telefone / WhatsApp</label>
+                        <input type="tel" required placeholder="(11) 99999-9999" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-vet-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Serviço Desejado</label>
+                        <select class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-vet-500 bg-white">
+                            <option>Consulta de Rotina</option>
+                            <option>Especialidade (Cardio/Dermato/etc)</option>
+                            <option>Exames Laboratoriais</option>
+                            <option>Banho & Tosa</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Data Preferida</label>
+                    <input type="date" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-vet-500">
+                </div>
+                <button type="submit" class="w-full bg-vet-600 hover:bg-vet-700 text-white font-semibold py-3.5 rounded-xl shadow-lg transition">Solicitar Agendamento</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Message Modal -->
+    <div id="success-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 text-center space-y-4">
+            <div class="w-16 h-16 bg-vet-100 text-vet-600 rounded-full flex items-center justify-center mx-auto">
+                <i data-lucide="check-circle-2" class="w-10 h-10"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-slate-900">Solicitação Enviada!</h3>
+            <p id="success-message" class="text-slate-600 text-sm">Recebemos seus dados com sucesso. Entraremos em contato em breve para confirmar seu horário.</p>
+            <button onclick="closeSuccessModal()" class="w-full bg-vet-600 hover:bg-vet-700 text-white font-semibold py-3 rounded-xl transition">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-16 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10">
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-vet-500 text-white p-2 rounded-xl">
+                        <i data-lucide="heart-pulse" class="w-6 h-6"></i>
+                    </div>
+                    <span class="text-xl font-extrabold text-white">Pet<span class="text-vet-500">Care</span></span>
+                </div>
+                <p class="text-sm">Excelência em medicina veterinária e plantão 24h para cães e gatos com muito carinho e estrutura completa.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 text-sm uppercase tracking-wider">Navegação</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><button onclick="switchPage('home')" class="hover:text-white transition">Início</button></li>
+                    <li><button onclick="switchPage('about')" class="hover:text-white transition">Sobre Nós</button></li>
+                    <li><button onclick="switchPage('services')" class="hover:text-white transition">Serviços</button></li>
+                    <li><button onclick="switchPage('team')" class="hover:text-white transition">Equipe</button></li>
+                    <li><button onclick="switchPage('blog')" class="hover:text-white transition">Blog & Dicas</button></li>
+                    <li><button onclick="switchPage('contact')" class="hover:text-white transition">Contato</button></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 text-sm uppercase tracking-wider">Serviços</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><span class="hover:text-white cursor-pointer" onclick="switchPage('services')">Pronto Socorro 24h</span></li>
+                    <li><span class="hover:text-white cursor-pointer" onclick="switchPage('services')">Consultas Especializadas</span></li>
+                    <li><span class="hover:text-white cursor-pointer" onclick="switchPage('services')">Centro Cirúrgico</span></li>
+                    <li><span class="hover:text-white cursor-pointer" onclick="switchPage('services')">Exames Laboratoriais</span></li>
+                    <li><span class="hover:text-white cursor-pointer" onclick="switchPage('services')">Banho e Tosa</span></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-white mb-4 text-sm uppercase tracking-wider">Emergência</h4>
+                <p class="text-sm mb-4">Estamos abertos 24 horas por dia, 7 dias por semana.</p>
+                <a href="tel:0800123456" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition">
+                    <i data-lucide="phone-call" class="w-4 h-4"></i> (11) 99999-8888
+                </a>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-slate-800 text-xs text-center">
+            &copy; 2026 PetCare Clínica Veterinária 24h. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+        });
+
+        // SPA Page Switcher Function
+        function switchPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-view');
+            pages.forEach(p => p.classList.remove('active'));
+
+            // Show target page
+            const target = document.getElementById('view-' + pageId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update desktop navigation active states
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => {
+                if (btn.getAttribute('data-nav') === pageId) {
+                    btn.classList.add('text-vet-600', 'font-semibold');
+                } else {
+                    btn.classList.remove('text-vet-600', 'font-semibold');
+                }
+            });
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Booking Modal Handlers
+        function openBookingModal() {
+            document.getElementById('booking-modal').classList.remove('hidden');
+            document.getElementById('booking-modal').classList.add('flex');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.remove('flex');
+            document.getElementById('booking-modal').classList.add('hidden');
+        }
+
+        function handleBookingSubmit(event) {
+            event.preventDefault();
+            closeBookingModal();
+            document.getElementById('success-message').innerText = "Sua solicitação de agendamento foi enviada! Entraremos em contato via WhatsApp para confirmar o horário.";
+            document.getElementById('success-modal').classList.remove('hidden');
+            document.getElementById('success-modal').classList.add('flex');
+        }
+
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            document.getElementById('success-message').innerText = "Sua mensagem foi enviada com sucesso! Responderemos em breve.";
+            document.getElementById('success-modal').classList.remove('hidden');
+            document.getElementById('success-modal').classList.add('flex');
+            event.target.reset();
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').classList.remove('flex');
+            document.getElementById('success-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
